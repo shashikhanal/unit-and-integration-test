@@ -1,0 +1,19 @@
+{
+  "name": "uie-testing",
+  "version": "1.0.0",
+  "description": "Everything tests.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Shashi Khanal",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^29.5.13",
+    "jasmine-ts": "^0.4.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}
