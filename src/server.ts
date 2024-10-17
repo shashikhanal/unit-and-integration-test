@@ -8,6 +8,12 @@ app.use(express.json());
 // mount the routes
 app.use('/api', accountController);
 
-app.listen(3000, () => {
-  console.log('Server is running on port: 3000...');
-});
+// start server only if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port: ${PORT}...`);
+  });
+}
+
+export default app;
