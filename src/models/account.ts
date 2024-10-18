@@ -12,6 +12,6 @@ const accountsDb: Account[] = [
 
 export const Account = {
   findById: async (id: string) => {
-    return accountsDb.find(account => account.id == id) || [];
+    return accountsDb.find(account => account.id == id) || {};
   }
 };

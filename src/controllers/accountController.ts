@@ -11,7 +11,7 @@ router.get('/account/:id', async (req: Request, res: Response) => {
     res.json(account);
   } catch {
     res.status(404).json({
-      error: 'Account not found!'
+      error: 'Error occured when getting Account!'
     });
   }
 });

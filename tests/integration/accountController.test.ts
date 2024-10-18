@@ -21,4 +21,10 @@ describe('GET /api/account:id', () => {
       accountType: 'savings',
     });
   });
+
+  it('returns empty object for non-existing account ID', async () => {
+    const response = await request(app).get('/api/account/9991a');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({});
+  });
 });
