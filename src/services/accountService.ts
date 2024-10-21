@@ -5,4 +5,9 @@ const getAccountById = async (id: string) => {
   return await Account.findById(id);
 }
 
-export { getAccountById };
+const updateAccountBalance = async (id: string, balance: number) => {
+  // simulating database update
+  return await Account.updateBalance(id, balance);
+}
+
+export { getAccountById, updateAccountBalance };

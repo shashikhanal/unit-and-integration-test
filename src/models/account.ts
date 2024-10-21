@@ -13,5 +13,15 @@ const accountsDb: Account[] = [
 export const Account = {
   findById: async (id: string) => {
     return accountsDb.find(account => account.id == id) || {};
-  }
+  },
+
+  updateBalance: async (id: string, balance: number) => {
+    let account = accountsDb.find(account => account.id == id);
+
+    if (!account) {
+      throw new Error('Account not found.');
+    }
+
+    return account.balance = balance;
+  },
 };

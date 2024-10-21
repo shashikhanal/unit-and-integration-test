@@ -1,8 +1,10 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
+import bodyParser from 'body-parser';
 import accountController from './controllers/accountController';
 import { authMiddleware } from './middlewares/authMiddleware';
 
 const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
 // middleware to parse incoming request bodies
 app.use(express.json());
 
