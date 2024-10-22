@@ -114,4 +114,28 @@ describe('GET /api/account/:id with Currency conversion', () => {
       accountType: 'savings',
     });
   });
+
+  it('should get the balance in NPR', async () => {
+    const response = await request(app)
+      .get('/api/account/1?currency=NPR')
+      .set('Authorization', 'authenticated-token');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      id: '1',
+      balance: 130000,
+      accountType: 'savings',
+    });
+  });
+
+  it('should get the balance in EUR', async () => {
+    const response = await request(app)
+      .get('/api/account/1?currency=EUR')
+      .set('Authorization', 'authenticated-token');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      id: '1',
+      balance: 850,
+      accountType: 'savings',
+    });
+  });
 });
