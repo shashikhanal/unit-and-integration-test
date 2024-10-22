@@ -11,7 +11,7 @@ app.use(express.json());
 // mount the routes
 // two separate endpoints just for demonstrating test complexity
 app.use('/api-without-auth', accountController);
-app.use('/api-with-auth', authMiddleware, accountController);
+app.use('/api', authMiddleware, accountController);
 
 // start server only if not in test mode
 if (process.env.NODE_ENV !== 'test') {

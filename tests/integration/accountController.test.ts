@@ -33,9 +33,9 @@ describe('GET /api-without-auth/account:id without Authentication', () => {
 
 // Integration test complexity - Moderate
 // Test with Authentication
-describe('GET /api-with-auth/account:id with Authentication', () => {
+describe('GET /api/account:id with Authentication', () => {
   it('returns 401 if no authorization token is provided in header', async () => {
-    const response = await request(app).get('/api-with-auth/account/1');
+    const response = await request(app).get('/api/account/1');
     expect(response.status).toBe(401);
     expect(response.body).toEqual({
       error: 'Unauthorized!'
@@ -44,7 +44,7 @@ describe('GET /api-with-auth/account:id with Authentication', () => {
 
   it('returns account information for a valid ID with valid token', async () => {
     const response = await request(app)
-      .get('/api-with-auth/account/1')
+      .get('/api/account/1')
       .set('Authorization', 'authenticated-token');
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
