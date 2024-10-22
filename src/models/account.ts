@@ -12,7 +12,13 @@ const accountsDb: Account[] = [
 
 export const Account = {
   findById: async (id: string) => {
-    return accountsDb.find(account => account.id == id) || {};
+    const account = accountsDb.find(account => account.id == id);
+
+    if (!account) {
+      throw new Error('Account not found.');
+    }
+
+    return account;
   },
 
   updateBalance: async (id: string, balance: number) => {

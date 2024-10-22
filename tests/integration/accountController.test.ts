@@ -1,5 +1,6 @@
 import request from 'supertest';
 import app from '../../src/server';
+import { Account } from '../../src/models/account';
 
 let server: any;
 
@@ -24,10 +25,10 @@ describe('GET /api-without-auth/account:id without Authentication', () => {
     });
   });
 
-  it('returns empty object for non-existing account ID', async () => {
+  it('throws error for non-existing account ID', async () => {
     const response = await request(app).get('/api-without-auth/account/9991a');
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({});
+    expect(response.status).toBe(404);
+    expect(response.body.error).toEqual('Error occured when getting Account!');
   });
 });
 
@@ -52,5 +53,24 @@ describe('GET /api/account:id with Authentication', () => {
       balance: 1000,
       accountType: 'savings',
     });
+  });
+});
+
+// Integration test complexity - Moderate
+// Database transaction testing
+describe('POST /api/account/update', () => {
+  it('should update the balance of a valid Account', async () => {
+    const response = await request(app)
+      .post('/api/account/update')
+      .set('Authorization', 'authenticated-token')
+      .send({
+        id: 1,
+        balance: 990
+      });
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(990);
+
+    const updatedAccount = await Account.findById('1');
+    expect(updatedAccount.balance).toBe(990);
   });
 });
