@@ -1,17 +1,28 @@
 import { Router, Request, Response } from 'express';
 import { getAccountById, updateAccountBalance } from '../services/accountService';
+import * as externalApi from '../api/externalApi';
 
 const router = Router();
 
 router.get('/account/:id', async (req: Request, res: Response) => {
   const accountId = req.params.id;
+  const currency = req.query.currency ? String(req.query.currency) : 'USD';
 
   try {
-    const account = await getAccountById(accountId);
+    let account = await getAccountById(accountId);
+    const exchangeRate = await externalApi.getExchangeRate(currency);
+    account.balance = account.balance * exchangeRate;
+
     res.json(account);
-  } catch {
+  } catch (error) {
+    let errorMessage = 'Error occured when getting Account!';
+
+    if (error instanceof Error && error.message) {
+      errorMessage = error.message;
+    }
+
     res.status(404).json({
-      error: 'Error occured when getting Account!'
+      error: errorMessage
     });
   }
 });

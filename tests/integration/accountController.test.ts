@@ -28,7 +28,7 @@ describe('GET /api-without-auth/account:id without Authentication', () => {
   it('throws error for non-existing account ID', async () => {
     const response = await request(app).get('/api-without-auth/account/9991a');
     expect(response.status).toBe(404);
-    expect(response.body.error).toEqual('Error occured when getting Account!');
+    expect(response.body.error).toEqual('Account not found.');
   });
 });
 
@@ -59,6 +59,19 @@ describe('GET /api/account:id with Authentication', () => {
 // Integration test complexity - Moderate
 // Database transaction testing
 describe('POST /api/account/update', () => {
+  let originalBalance: number;
+
+  beforeEach(async () => {
+    // store the original balance before making any changes
+    const account = await Account.findById('1');
+    originalBalance = account.balance;
+  });
+
+  afterEach(async () => {
+    // revert the balance afte each test
+    await Account.updateBalance('1', originalBalance);
+  });
+
   it('should update the balance of a valid Account', async () => {
     const response = await request(app)
       .post('/api/account/update')
@@ -84,5 +97,21 @@ describe('POST /api/account/update', () => {
       });
     expect(response.status).toBe(400);
     expect(response.body.error).toEqual('Error occured when updating Account balance!');
+  });
+});
+
+// Integration test complexity - Advanced
+// External API integration
+describe('GET /api/account/:id with Currency conversion', () => {
+  it('should get the balance in USD', async () => {
+    const response = await request(app)
+      .get('/api/account/1')
+      .set('Authorization', 'authenticated-token');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      id: '1',
+      balance: 1000,
+      accountType: 'savings',
+    });
   });
 });

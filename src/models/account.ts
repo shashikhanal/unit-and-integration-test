@@ -18,7 +18,7 @@ export const Account = {
       throw new Error('Account not found.');
     }
 
-    return account;
+    return JSON.parse(JSON.stringify(account));
   },
 
   updateBalance: async (id: string, balance: number) => {
