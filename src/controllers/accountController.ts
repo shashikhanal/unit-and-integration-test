@@ -16,7 +16,7 @@ router.get('/account/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/account', async (req: Request, res: Response) => {
+router.post('/account/update', async (req: Request, res: Response) => {
   const accountId: string = req.body.id;
   const balance: number = Number(req.body.balance);
 
