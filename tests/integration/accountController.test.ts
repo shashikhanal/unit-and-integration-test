@@ -73,4 +73,16 @@ describe('POST /api/account/update', () => {
     const updatedAccount = await Account.findById('1');
     expect(updatedAccount.balance).toBe(990);
   });
+
+  it('should return 404 error if account does not exist', async () => {
+    const response = await request(app)
+      .post('/api/account/update')
+      .set('Authorization', 'authenticated-token')
+      .send({
+        id: 999,
+        balance: 5000
+      });
+    expect(response.status).toBe(400);
+    expect(response.body.error).toEqual('Error occured when updating Account balance!');
+  });
 });
