@@ -102,7 +102,7 @@ describe('POST /api/account/update', () => {
 
 // Integration test complexity - Advanced
 // External API integration
-describe('GET /api/account/:id with Currency conversion', () => {
+describe('GET /api/account/:id with external Currency conversion API', () => {
   it('should get the balance in USD', async () => {
     const response = await request(app)
       .get('/api/account/1')
@@ -137,5 +137,13 @@ describe('GET /api/account/:id with Currency conversion', () => {
       balance: 850,
       accountType: 'savings',
     });
+  });
+
+  it('should throw error when external API does not support the currency', async () => {
+    const response = await request(app)
+      .get('/api/account/1?currency=CAD')
+      .set('Authorization', 'authenticated-token');
+    expect(response.status).toBe(404);
+    expect(response.body.error).toEqual('Currency not supported.');
   });
 });
