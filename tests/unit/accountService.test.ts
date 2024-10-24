@@ -3,7 +3,7 @@ import { getAccountById, updateAccountBalance } from '../../src/services/account
 
 jest.mock('../../src/models/account'); // mocking the Account model
 
-// Unit test complexity - Easy
+// Unit test complexity - Moderate
 describe('Account service: getAccountById()', () => {
   it('should return the correct account when called with a valid ID', async () => {
     // mock Account.findById to return a fake account
@@ -17,6 +17,7 @@ describe('Account service: getAccountById()', () => {
   });
 
   it('should return null if the account does not exist', async () => {
+    // mock Account.findById to return null
     (Account.findById as jest.Mock).mockResolvedValue(null);
 
     const account = await getAccountById('9991a');
@@ -25,9 +26,10 @@ describe('Account service: getAccountById()', () => {
   });
 });
 
+// Unit test complexity - Moderate
 describe('Account service: updateAccountBalance()', () => {
   it('should update the balance successfully', async () => {
-    // mock Account.findById to return a fake account
+    // mock Account.updateBalance to return a fake account
     const mockUpdatedAccount = { id: '1', balance: 1500, accountType: 'savings' };
     (Account.updateBalance as jest.Mock).mockResolvedValue(mockUpdatedAccount);
 
@@ -36,4 +38,18 @@ describe('Account service: updateAccountBalance()', () => {
     // make sure Account.updateBalance function is called at least once
     expect(Account.updateBalance).toHaveBeenCalledWith('1', 1500);
   });
+
+  it('should throw an error if account is not found', async () => {
+    // mock Account.updateBalance to return error
+    (Account.updateBalance as jest.Mock).mockRejectedValue(new Error('Account not found.'));
+
+    // this doesn't work because
+    // when you await the promise , you are unwrapping the promise,
+    // which means that any rejection is already handled (or causes an immediate error)
+    // const account = await updateAccountBalance('99', 2000);
+    // expect(account).rejects.toThrow('Account not found.');
+
+    await expect(updateAccountBalance('99', 2000)).rejects.toThrow('Account not found.');
+    expect(Account.updateBalance).toHaveBeenCalledWith('99', 2000);
+  });  
 });
