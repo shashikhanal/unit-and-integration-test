@@ -26,8 +26,20 @@ describe('Account service: getAccountById()', () => {
   });
 });
 
-// Unit test complexity - Moderate
 describe('Account service: updateAccountBalance()', () => {
+  beforeEach(async () => {
+    // reset mock functions before each test to ensure a clean state
+    // if mocks functions aren't reset, mock call count is messeup up
+    // in this case the third test in this suite will hold '4' in toHaveBeenCalledTimes()
+    jest.clearAllMocks();  // clears call count and mock results
+  });
+
+  afterEach(async () => {
+    // optional: Cleanup after each test (not strictly necessary unless needed)
+    // you can also use jest.resetAllMocks() if you want to reset mock implementations too.
+  });
+
+  // Unit test complexity - Moderate
   it('should update the balance successfully', async () => {
     // mock Account.updateBalance to return a fake account
     const mockUpdatedAccount = { id: '1', balance: 1500, accountType: 'savings' };
@@ -51,5 +63,25 @@ describe('Account service: updateAccountBalance()', () => {
 
     await expect(updateAccountBalance('99', 2000)).rejects.toThrow('Account not found.');
     expect(Account.updateBalance).toHaveBeenCalledWith('99', 2000);
-  });  
+  });
+
+  // Unit test complexity - Advanced
+  // test for concurrent balance updates
+  it('should handle concurrent balance updates correctly', async () => {
+    const mockAccount = { id: '1', balance: 1000, accountType: 'savings' };
+
+    // since Account.updateBalance() just returns the updated balance amount
+    (Account.updateBalance as jest.Mock)
+      .mockResolvedValueOnce(1500)
+      .mockResolvedValueOnce(2000);
+
+    const update1 = updateAccountBalance('1', 1500);
+    const update2 = updateAccountBalance('1', 2000);
+
+    const [balance1, balance2] = await Promise.all([update1, update2]);
+
+    expect(balance1).toBe(1500);
+    expect(balance2).toBe(2000);
+    expect(Account.updateBalance).toHaveBeenCalledTimes(2);
+  });
 });
