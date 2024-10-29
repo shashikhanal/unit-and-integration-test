@@ -14,7 +14,7 @@ afterAll(() => {
 
 // Integration test complexity - Easy
 // Test without Authentication
-describe('GET /api-without-auth/account:id without Authentication', () => {
+describe('GET /api-without-auth/account/:id without Authentication', () => {
   it('returns account information for a valid ID', async () => {
     const response = await request(app).get('/api-without-auth/account/1');
     expect(response.status).toBe(200);
